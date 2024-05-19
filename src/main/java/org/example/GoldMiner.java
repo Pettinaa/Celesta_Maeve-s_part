@@ -38,7 +38,7 @@ public class GoldMiner extends GameEngine {
     Image gold3;
 
     // Gem properties
-    int numGems = 4;
+    int numGems = 4; // 1 of each type
     int[] gemX = new int[numGems];
     int[] gemY = new int[numGems];
     int gemWidth = 32;
@@ -51,6 +51,9 @@ public class GoldMiner extends GameEngine {
     Image gem3;
     Image gem4;
 
+    // Score properties
+    int score = 0;
+
     Image hook;
     Random rand = new Random();
 
@@ -62,18 +65,16 @@ public class GoldMiner extends GameEngine {
         currentY = startY;
     }
 
-    public void initGolds() {
+    public void initGoldsAndGems() {
         for (int i = 0; i < numGolds; i++) {
             goldX[i] = rand.nextInt(1200) + 50; // Random x position between 50 and 1250
             goldY[i] = rand.nextInt(300) + 400; // Random y position between 400 and 700
             goldTypes[i] = i / 2; // Assign type based on index (2 of each type)
         }
-    }
 
-    public void initGems() {
         for (int i = 0; i < numGems; i++) {
-            gemX[i] = rand.nextInt(1200) + 50; // Random x position between 50 and 1250
-            gemY[i] = rand.nextInt(300) + 400; // Random y position between 400 and 700
+            gemX[i] = rand.nextInt(700) + 200; // Random x position between 50 and 1250
+            gemY[i] = rand.nextInt(250) + 400; // Random y position between 400 and 650
         }
     }
 
@@ -101,6 +102,7 @@ public class GoldMiner extends GameEngine {
                 if (!goldCaptured[i] && checkCollision(currentX, currentY, goldX[i], goldY[i], goldWidth, goldHeight)) {
                     goldGet[i] = true;
                     goldCaptured[i] = true; // Mark the gold as captured
+                    score += 1; // Increment score by 1 for gold
                     state = 2; // Switch to retracting state immediately
                     break;
                 }
@@ -111,6 +113,11 @@ public class GoldMiner extends GameEngine {
                 if (!gemCaptured[i] && checkCollision(currentX, currentY, gemX[i], gemY[i], gemWidth, gemHeight)) {
                     gemGet[i] = true;
                     gemCaptured[i] = true; // Mark the gem as captured
+                    if (i == 3) {
+                        score += 5; // Increment score by 5 for diamond
+                    } else {
+                        score += 3; // Increment score by 3 for other gems
+                    }
                     state = 2; // Switch to retracting state immediately
                     break;
                 }
@@ -124,7 +131,7 @@ public class GoldMiner extends GameEngine {
                     goldGet[i] = false; // Hide gold when hook is retracted
                 }
                 for (int i = 0; i < numGems; i++) {
-                    gemGet[i] = false; // Hide gems when hook is retracted
+                    gemGet[i] = false; // Hide gem when hook is retracted
                 }
             }
             currentX = (int) (startX + lineLength * Math.cos(targetAngle));
@@ -139,7 +146,7 @@ public class GoldMiner extends GameEngine {
         drawImage(hook, currentX - 35, currentY - 10, 72, 50);
     }
 
-    public void drawGold() {
+    public void drawGoldAndGems() {
         if (gold == null) {
             gold = loadImage("Images/GoldMiner/gold0.gif");
             gold2 = loadImage("Images/GoldMiner/gold1.gif");
@@ -153,16 +160,16 @@ public class GoldMiner extends GameEngine {
             gem4 = subImage(gems, 32, 32, 32, 32);
         }
 
-        //画金块
+        // Draw gold
         for (int i = 0; i < numGolds; i++) {
             if (goldGet[i]) {
                 // Draw gold at hook's current position
                 if (goldTypes[i] == 0) {
-                    drawImage(gold, currentX - goldWidth / 2, currentY - goldHeight / 2, goldWidth, goldHeight);
+                    drawImage(gold, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 } else if (goldTypes[i] == 1) {
-                    drawImage(gold2, currentX - goldWidth / 2, currentY - goldHeight / 2, goldWidth, goldHeight);
+                    drawImage(gold2, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 } else {
-                    drawImage(gold3, currentX - goldWidth / 2, currentY - goldHeight / 2, goldWidth, goldHeight);
+                    drawImage(gold3, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 }
             } else if (!goldCaptured[i]) {
                 // Draw gold at its original position if it has not been captured
@@ -176,18 +183,18 @@ public class GoldMiner extends GameEngine {
             }
         }
 
-        //画宝石
+        // Draw gems
         for (int i = 0; i < numGems; i++) {
             if (gemGet[i]) {
                 // Draw gem at hook's current position
                 if (i == 0) {
-                    drawImage(gem1, currentX - gemWidth / 2, currentY - gemHeight / 2, gemWidth, gemHeight);
+                    drawImage(gem1, currentX - gemWidth / 2, currentY - gemHeight / 2 + 20, gemWidth, gemHeight);
                 } else if (i == 1) {
-                    drawImage(gem2, currentX - gemWidth / 2, currentY - gemHeight / 2, gemWidth, gemHeight);
+                    drawImage(gem2, currentX - gemWidth / 2, currentY - gemHeight / 2 + 20, gemWidth, gemHeight);
                 } else if (i == 2) {
-                    drawImage(gem3, currentX - gemWidth / 2, currentY - gemHeight / 2, gemWidth, gemHeight);
-                } else if (i == 3) {
-                    drawImage(gem4, currentX - gemWidth / 2, currentY - gemHeight / 2, gemWidth, gemHeight);
+                    drawImage(gem3, currentX - gemWidth / 2, currentY - gemHeight / 2 + 20, gemWidth, gemHeight);
+                } else {
+                    drawImage(gem4, currentX - gemWidth / 2, currentY - gemHeight / 2 + 20, gemWidth, gemHeight);
                 }
             } else if (!gemCaptured[i]) {
                 // Draw gem at its original position if it has not been captured
@@ -197,7 +204,7 @@ public class GoldMiner extends GameEngine {
                     drawImage(gem2, gemX[i], gemY[i], gemWidth, gemHeight);
                 } else if (i == 2) {
                     drawImage(gem3, gemX[i], gemY[i], gemWidth, gemHeight);
-                } else if (i == 3) {
+                } else {
                     drawImage(gem4, gemX[i], gemY[i], gemWidth, gemHeight);
                 }
             }
@@ -217,8 +224,7 @@ public class GoldMiner extends GameEngine {
         background = loadImage("Images/GoldMiner/bg.png");
         people = loadImage("Images/GoldMiner/people.png");
         initLine();
-        initGolds();
-        initGems();
+        initGoldsAndGems();
     }
 
     @Override
@@ -232,7 +238,18 @@ public class GoldMiner extends GameEngine {
         drawImage(background, 0, 0, 1255, 700);
         drawImage(people, 580, 240, 100, 100);
         drawHook();
-        drawGold();
+        drawGoldAndGems();
+        drawScore();
+    }
+    Image scoreBook;
+
+    public void drawScore() {
+        scoreBook = loadImage("Images/GoldMiner/scoreBook.png");
+        drawImage(scoreBook, 0, 0, 280, 150);
+        changeColor(yellow);
+        drawText(40, 80,"score: " + score );
+
+
     }
 
     @Override
