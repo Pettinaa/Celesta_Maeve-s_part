@@ -5,9 +5,12 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class GoldMiner extends GameEngine {
-    public static void main(String[] args) {
-        createGame(new GoldMiner());
-    }
+//    public static void main(String[] args) {
+//        //createGame(new GoldMiner());
+//    }
+    Font customFont;
+
+    AudioClip bgm;
 
     // Line properties
     int startX;
@@ -50,6 +53,16 @@ public class GoldMiner extends GameEngine {
     Image gem2;
     Image gem3;
     Image gem4;
+
+    //confetti
+    double confettiTime;
+    int confettiFrame;
+    Image confettiSheet;
+    Image[] confettiImages;
+
+    boolean playConfetti; // 标志位，表示是否播放彩带特效
+    double confettiTimer; // 计时器，用于控制彩带特效的播放时间
+    int currentConfettiFrame; // 当前彩带特效的帧索引
 
     // Score properties
     int score = 0;
@@ -223,14 +236,60 @@ public class GoldMiner extends GameEngine {
         setupWindow(1255, 700);
         background = loadImage("Images/GoldMiner/bg.png");
         people = loadImage("Images/GoldMiner/people.png");
+        bgm = loadAudio("Audio/GoldMiner/bgm.wav");
+        startAudioLoop(bgm);
         initLine();
         initGoldsAndGems();
+
+        customFont = new Font("Sans-serif", Font.PLAIN, 24); // 使用 Arial 字体，常规样式，大小 24
+
+        //confetti
+//        confettiSheet = loadImage("Images/GoldMiner/Confetti.png");
+//        confettiImages = new Image[64];
+//
+//        Image[] temp = new Image[8];
+//        int k = 0;
+//        for (int i = 0; i < 8; i++) {
+//            for (int j = 0; j < 8; j++) {
+//                temp[j] = subImage(confettiSheet, 512 * j, 512 * i, 512, 512);
+//                confettiImages[k] = temp[j];
+//                k++;
+//            }
+//        }
+
+        confettiSheet = loadImage("Images/GoldMiner/Confetti.png");
+        confettiImages = new Image[64];
+        int frameWidth = confettiSheet.getWidth(null) / 8;
+        int frameHeight = confettiSheet.getHeight(null) / 8;
+        for (int i = 0; i < 64; i++) {
+            int row = i / 8;
+            int col = i % 8;
+            confettiImages[i] = subImage(confettiSheet, col * frameWidth, row * frameHeight, frameWidth, frameHeight);
+        }
+
+
     }
 
     @Override
     public void update(double dt) {
         updateHook(dt);
+
+        if (score >= 10) {
+            playConfetti = true;
+        }
+
+        if (playConfetti) {
+            confettiTimer += dt;
+            currentConfettiFrame = (int) (confettiTimer * 20) % confettiImages.length; // Assume 20 frames per second
+            if (confettiTimer >= 1.5) { // Adjust confetti duration as needed
+                playConfetti = false;
+                confettiTimer = 0.0;
+                currentConfettiFrame = 0; // Reset frame index
+            }
+        }
     }
+
+
 
     @Override
     public void paintComponent() {
@@ -240,6 +299,14 @@ public class GoldMiner extends GameEngine {
         drawHook();
         drawGoldAndGems();
         drawScore();
+
+        int confettiX = (1255 - confettiImages[0].getWidth(null)) / 2; // 游戏窗口宽度减去彩带特效宽度的一半
+        int confettiY = (700 - confettiImages[0].getHeight(null)) / 2; // 游戏窗口高度减去彩带特效高度的一半
+        if (playConfetti) {
+            drawImage(confettiImages[currentConfettiFrame], 300, 200, 1000, 1000);
+        }
+
+
     }
     Image scoreBook;
 
@@ -247,6 +314,7 @@ public class GoldMiner extends GameEngine {
         scoreBook = loadImage("Images/GoldMiner/scoreBook.png");
         drawImage(scoreBook, 0, 0, 280, 150);
         changeColor(yellow);
+        mFrame.setFont(customFont); // 设置自定义字体
         drawText(40, 80,"score: " + score );
 
 
@@ -258,5 +326,23 @@ public class GoldMiner extends GameEngine {
             targetAngle = angle * Math.PI; // Save the current angle
             state = 1; // Switch to extending state
         }
+
+        // Check if a gem is captured
+        for (int i = 0; i < numGems; i++) {
+            if (!gemCaptured[i] && checkCollision(currentX, currentY, gemX[i], gemY[i], gemWidth, gemHeight)) {
+                gemGet[i] = true;
+                gemCaptured[i] = true; // Mark the gem as captured
+                if (i == 3) {
+                    score += 5; // Increment score by 5 for diamond
+                } else {
+                    score += 3; // Increment score by 3 for other gems
+                }
+                playConfetti = true; // Start confetti animation
+                state = 2; // Switch to retracting state immediately
+                break;
+            }
+        }
     }
+
+
 }

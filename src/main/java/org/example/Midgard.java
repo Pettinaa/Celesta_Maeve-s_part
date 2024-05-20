@@ -359,6 +359,7 @@ public class Midgard extends GameEngine {
 
         framesChickenLeft = new Image[3];
         framesChickenRight = new Image[3] ;
+
         for (int i = 0; i < 3; i++) {
             framesChickenRight[i] = subImage(humanChickenSheet,32*i,96,32,32);
             framesChickenLeft[i] = subImage(humanChickenSheet,32*i,32,32,32);
