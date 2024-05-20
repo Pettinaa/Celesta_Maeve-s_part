@@ -5,9 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-public class Svartalfheim extends GameEngine{
+public class SvartalfheimUnder extends GameEngine{
     public static void main(String[] args) {
-        createGame(new Svartalfheim());
+        createGame(new SvartalfheimUnder());
     }
 
     //mission

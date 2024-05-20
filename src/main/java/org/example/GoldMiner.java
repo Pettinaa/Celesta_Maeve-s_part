@@ -244,6 +244,7 @@ public class GoldMiner extends GameEngine {
     // Game properties
     Image background;
     Image people;
+    Image victory;
     String cheersPath;
     String cheersPath2;
     boolean showCongratulation; // Flag for showing congratulation text
@@ -292,13 +293,19 @@ public class GoldMiner extends GameEngine {
             confettiImages[i] = subImage(confettiSheet, col * frameWidth, row * frameHeight, frameWidth, frameHeight);
         }
 
+//        if(playCheers){
+//            playAudio(cheers);
+//        }
+
 
     }
 
     public void drawCheers(){
+        victory = loadImage("Images/GoldMiner/victory.png");
         drawGif(cheersPath, 200, -200,  1000, 900);
         drawGif(cheersPath2, 200, -200,  1000, 900);
-        playAudio(cheers);
+
+        drawImage(victory, 550, 350,200, 170);
     }
     @Override
     public void update(double dt) {
@@ -349,6 +356,7 @@ public class GoldMiner extends GameEngine {
     }
 
 
+    int victory_audio = 1;
 
     @Override
     public void paintComponent() {
@@ -377,6 +385,10 @@ public class GoldMiner extends GameEngine {
         if(playCheers){
             drawCheers();
         }
+        if(playCheers && victory_audio == 1){
+            playAudio(cheers);
+            victory_audio--;
+        }
 
 
     }
@@ -392,6 +404,7 @@ public class GoldMiner extends GameEngine {
 
     }
     boolean playCheers = false;
+    boolean nextMission = false;
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -400,8 +413,14 @@ public class GoldMiner extends GameEngine {
             state = 1; // Switch to extending state
         }
 
+        if((e.getX() >= 550 && e.getX() <= 550 + 200 && e.getY() >= 350 && e.getY() <= 350 + 170) && playCheers){
+            nextMission = true;
+            createGame(new SvartalfheimUpper());
+        }
+
         // Check if a gem is captured
         for (int i = 0; i < numGems; i++) {
+
             if (!gemCaptured[i] && checkCollision(currentX, currentY, gemX[i], gemY[i], gemWidth, gemHeight)) {
                 gemGet[i] = true;
                 gemCaptured[i] = true; // Mark the gem as captured
