@@ -53,9 +53,9 @@ public class SvartalfheimUpper extends GameEngine {
 
     public void drawDwarf() {
         if (dwarfLeft) {
-            drawImage(framesDwarfLeft[currentDwarfFrame], dwarfPositionX + 100, 400, 72 * 0.7, 96 * 0.7);
+            drawImage(framesDwarfLeft[currentDwarfFrame], dwarfPositionX + 300, 350, 72 * 0.7, 96 * 0.7);
         } else {
-            drawImage(framesDwarfRight[currentDwarfFrame], dwarfPositionX + 100, 400, 72 * 0.7, 96 * 0.7);
+            drawImage(framesDwarfRight[currentDwarfFrame], dwarfPositionX + 300, 350, 72 * 0.7, 96 * 0.7);
         }
     }
 
@@ -184,7 +184,7 @@ public class SvartalfheimUpper extends GameEngine {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) {
-            createGame(new GoldMiner());
+            //createGame(new GoldMiner());
         }
     }
 

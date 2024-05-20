@@ -32,6 +32,7 @@ public class SvartalfheimUnder extends GameEngine{
     boolean dwarfLeft;
     int currentDwarfFrame;
     double dwarfPositionX = 200;
+    boolean movingRight = true; // 新增：矮人移动方向标志
     double animTime;
 
     public void initDwarf(){
@@ -49,9 +50,9 @@ public class SvartalfheimUnder extends GameEngine{
     }
     public void drawDwarf(){
         if(dwarfLeft){
-            drawImage(framesDwarfRight[currentDwarfFrame],  dwarfPositionX, 400,72 * 1.5,96 * 1.5);
-        }else{
             drawImage(framesDwarfLeft[currentDwarfFrame],  dwarfPositionX, 400,72 * 1.5,96 * 1.5);
+        }else{
+            drawImage(framesDwarfRight[currentDwarfFrame],  dwarfPositionX, 400,72 * 1.5,96 * 1.5);
         }
     }
     //princess
@@ -134,17 +135,21 @@ public class SvartalfheimUnder extends GameEngine{
 
         animTime += dt;
 
-        //让鸡走路
-        if(dwarfLeft){
+        // 让矮人走路
+        if (movingRight) {
             dwarfPositionX += 1;
-        }else {
+            if (dwarfPositionX >= 270) { // 修改这里，矮人应该在合适的位置调转方向
+                movingRight = false;
+                dwarfLeft = true;
+            }
+        } else {
             dwarfPositionX -= 1;
+            if (dwarfPositionX <= 200) { // 修改这里，矮人应该在合适的位置调转方向
+                movingRight = true;
+                dwarfLeft = false;
+            }
         }
-        if (dwarfPositionX > 900) {
-            dwarfLeft = false;
-        }else if (dwarfPositionX < 800){
-            dwarfLeft = true;
-        }
+
         currentDwarfFrame = getFrame(0.3, 3);
 
         //公主走路
