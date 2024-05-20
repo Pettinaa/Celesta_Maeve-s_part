@@ -172,7 +172,7 @@ public class Svartalfheim extends GameEngine{
         drawImage(bg, 0, 0, 1255,700);
         getMission = true;
 
-        //drawMission();
+        drawMission();
         drawDwarf();
         drawPrincess();
 

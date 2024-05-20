@@ -1,5 +1,6 @@
 package org.example;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -36,7 +37,7 @@ public class GoldMiner extends GameEngine {
     boolean[] goldGet = new boolean[numGolds];
     boolean[] goldCaptured = new boolean[numGolds];
     int[] goldTypes = new int[numGolds]; // 0: gold, 1: gold2, 2: gold3
-    Image gold;
+    ImageIcon gold;
     Image gold2;
     Image gold3;
 
@@ -158,12 +159,23 @@ public class GoldMiner extends GameEngine {
         hook = loadImage("Images/GoldMiner/hook.png");
         drawImage(hook, currentX - 35, currentY - 10, 72, 50);
     }
+    String goldPath;
+    String gold2Path;
+    String gold3Path;
 
     public void drawGoldAndGems() {
         if (gold == null) {
-            gold = loadImage("Images/GoldMiner/gold0.gif");
+
+            //gold = loadImage("Images/GoldMiner/gold0.gif");
+            gold = new ImageIcon("Images/GoldMiner/gold0.gif");
+
+            goldPath = "Images/GoldMiner/gold0.gif";
+            gold2Path = "Images/GoldMiner/gold1.gif";
+            gold3Path = "Images/GoldMiner/gold2.gif";
+
             gold2 = loadImage("Images/GoldMiner/gold1.gif");
             gold3 = loadImage("Images/GoldMiner/gold2.gif");
+
             gems = loadImage("Images/GoldMiner/gems.png");
 
             //将每种宝石从精灵图中提取出来
@@ -178,20 +190,20 @@ public class GoldMiner extends GameEngine {
             if (goldGet[i]) {
                 // Draw gold at hook's current position
                 if (goldTypes[i] == 0) {
-                    drawImage(gold, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
+                    drawGif(goldPath, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 } else if (goldTypes[i] == 1) {
-                    drawImage(gold2, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
+                    drawGif(gold2Path, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 } else {
-                    drawImage(gold3, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
+                    drawGif(gold3Path, currentX - goldWidth / 2, currentY - goldHeight / 2 + 30, goldWidth, goldHeight);
                 }
             } else if (!goldCaptured[i]) {
                 // Draw gold at its original position if it has not been captured
                 if (goldTypes[i] == 0) {
-                    drawImage(gold, goldX[i], goldY[i], goldWidth, goldHeight);
+                    drawGif(goldPath, goldX[i], goldY[i], goldWidth, goldHeight);
                 } else if (goldTypes[i] == 1) {
-                    drawImage(gold2, goldX[i], goldY[i], goldWidth, goldHeight);
+                    drawGif(gold2Path, goldX[i], goldY[i], goldWidth, goldHeight);
                 } else {
-                    drawImage(gold3, goldX[i], goldY[i], goldWidth, goldHeight);
+                    drawGif(gold3Path, goldX[i], goldY[i], goldWidth, goldHeight);
                 }
             }
         }

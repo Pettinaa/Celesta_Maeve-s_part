@@ -488,6 +488,15 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		return null;
 	}
 
+	public void drawGif(String gifPath, int x, int y, int width, int height) {
+		// Load the GIF image
+		ImageIcon gifIcon = new ImageIcon(gifPath);
+		Image gifImage = gifIcon.getImage();
+
+		// Draw the GIF image at the specified position with specified width and height
+		mGraphics.drawImage(gifImage, x, y, width, height, null);
+	}
+
 	// Loads a sub-image out of an image
 	public Image subImage(Image source, int x, int y, int w, int h) {
 		// Check if image is null
