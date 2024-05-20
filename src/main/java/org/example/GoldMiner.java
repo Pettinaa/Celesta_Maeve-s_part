@@ -6,12 +6,13 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class GoldMiner extends GameEngine {
-//    public static void main(String[] args) {
-//        //createGame(new GoldMiner());
-//    }
+    public static void main(String[] args) {
+        createGame(new GoldMiner());
+    }
     Font customFont;
 
     AudioClip bgm;
+    AudioClip cheers;
 
     // Line properties
     int startX;
@@ -243,17 +244,29 @@ public class GoldMiner extends GameEngine {
     // Game properties
     Image background;
     Image people;
+    String cheersPath;
+    String cheersPath2;
+    boolean showCongratulation; // Flag for showing congratulation text
+    double congratulationTimer; // Timer for controlling congratulation text duration
+
 
     public void init() {
         setupWindow(1255, 700);
         background = loadImage("Images/GoldMiner/bg.png");
         people = loadImage("Images/GoldMiner/people.png");
         bgm = loadAudio("Audio/GoldMiner/bgm.wav");
-        startAudioLoop(bgm);
+        cheers = loadAudio("Audio/GoldMiner/cheers.wav");
+
+        //startAudioLoop(bgm, 90);
+        playAudio(bgm);
+
         initLine();
         initGoldsAndGems();
 
         customFont = new Font("Sans-serif", Font.PLAIN, 24); // 使用 Arial 字体，常规样式，大小 24
+
+        cheersPath = "Images/GoldMiner/cheers4.gif";
+        cheersPath2 = "Images/GoldMiner/cheers3.gif";
 
         //confetti
 //        confettiSheet = loadImage("Images/GoldMiner/Confetti.png");
@@ -282,23 +295,57 @@ public class GoldMiner extends GameEngine {
 
     }
 
+    public void drawCheers(){
+        drawGif(cheersPath, 200, -200,  1000, 900);
+        drawGif(cheersPath2, 200, -200,  1000, 900);
+        playAudio(cheers);
+    }
     @Override
     public void update(double dt) {
         updateHook(dt);
 
-        if (score >= 10) {
-            playConfetti = true;
+//        if (score >= 10) {
+//            playConfetti = true;
+//        }
+//
+//        if (playConfetti) {
+//            confettiTimer += dt;
+//            currentConfettiFrame = (int) (confettiTimer * 20) % confettiImages.length; // Assume 20 frames per second
+//            if (confettiTimer >= 1.5) { // Adjust confetti duration as needed
+//                playConfetti = false;
+//                confettiTimer = 0.0;
+//                currentConfettiFrame = 0; // Reset frame index
+//            }
+//        }
+
+        if(score >= 10){
+            playCheers = true;
         }
 
-        if (playConfetti) {
-            confettiTimer += dt;
-            currentConfettiFrame = (int) (confettiTimer * 20) % confettiImages.length; // Assume 20 frames per second
-            if (confettiTimer >= 1.5) { // Adjust confetti duration as needed
-                playConfetti = false;
-                confettiTimer = 0.0;
-                currentConfettiFrame = 0; // Reset frame index
-            }
-        }
+//        if (score >= 10 && !playConfetti) {
+//            playConfetti = true;
+//            showCongratulation = true; // Set flag to show congratulation text
+//            congratulationTimer = 0; // Reset the congratulation timer
+//        }
+//
+//        // Update congratulation timer if the flag is set
+//        if (showCongratulation) {
+//            congratulationTimer += dt;
+//            if (congratulationTimer >= 3) {
+//                showCongratulation = false; // Hide congratulation text after 3 seconds
+//            }
+//        }
+
+//        if (playConfetti) {
+//            confettiTimer += dt;
+//            currentConfettiFrame = (int) (confettiTimer * 20) % confettiImages.length; // Assume 20 frames per second
+//            if (confettiTimer >= 1.5) { // Adjust confetti duration as needed
+//                playConfetti = false;
+//                confettiTimer = 0.0;
+//                currentConfettiFrame = 0; // Reset frame index
+//            }
+//        }
+
     }
 
 
@@ -314,8 +361,21 @@ public class GoldMiner extends GameEngine {
 
         int confettiX = (1255 - confettiImages[0].getWidth(null)) / 2; // 游戏窗口宽度减去彩带特效宽度的一半
         int confettiY = (700 - confettiImages[0].getHeight(null)) / 2; // 游戏窗口高度减去彩带特效高度的一半
-        if (playConfetti) {
-            drawImage(confettiImages[currentConfettiFrame], 300, 200, 1000, 1000);
+//        if (playConfetti) {
+//            drawImage(confettiImages[currentConfettiFrame], 300, 200, 1000, 1000);
+//        }
+
+//        if (playConfetti) {
+//            drawImage(confettiImages[currentConfettiFrame], confettiX, confettiY, confettiImages[0].getWidth(null), confettiImages[0].getHeight(null));
+//        }
+
+        if (showCongratulation) {
+           // drawText("congratulation！", 600, 400, customFont, Color.RED);
+            //drawImage() ;
+        }
+
+        if(playCheers){
+            drawCheers();
         }
 
 
@@ -331,6 +391,7 @@ public class GoldMiner extends GameEngine {
 
 
     }
+    boolean playCheers = false;
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -349,7 +410,9 @@ public class GoldMiner extends GameEngine {
                 } else {
                     score += 3; // Increment score by 3 for other gems
                 }
-                playConfetti = true; // Start confetti animation
+                //playConfetti = true; // Start confetti animation
+
+
                 state = 2; // Switch to retracting state immediately
                 break;
             }
