@@ -35,7 +35,8 @@ public class SvartalfheimUpper extends GameEngine {
     int currentDwarfFrame;
     double dwarfPositionX = 200;
     double animTime;
-    boolean movingRight = true; // 新增：矮人移动方向标志
+    boolean movingRight = true; // 矮人移动方向标志
+    boolean dwarfStop = false; // 矮人停止移动标志
 
     public void initDwarf() {
         dwarf = loadImage("Images/Svartalfheim/dwarf.png");
@@ -154,28 +155,31 @@ public class SvartalfheimUpper extends GameEngine {
     public void update(double dt) {
         animTime += dt;
 
-        // 让矮人走路
-        if (movingRight) {
-            dwarfPositionX += 1;
-            if (dwarfPositionX >= 270) { // 修改这里，矮人应该在合适的位置调转方向
-                movingRight = false;
-                dwarfLeft = true;
+        // 让矮人走路，只有在 dwarfStop 为 false 时才移动
+        if (!dwarfStop) {
+            if (movingRight) {
+                dwarfPositionX += 1;
+                if (dwarfPositionX >= 270) { // 修改这里，矮人应该在合适的位置调转方向
+                    movingRight = false;
+                    dwarfLeft = true;
+                }
+            } else {
+                dwarfPositionX -= 1;
+                if (dwarfPositionX <= 200) { // 修改这里，矮人应该在合适的位置调转方向
+                    movingRight = true;
+                    dwarfLeft = false;
+                }
             }
-        } else {
-            dwarfPositionX -= 1;
-            if (dwarfPositionX <= 200) { // 修改这里，矮人应该在合适的位置调转方向
-                movingRight = true;
-                dwarfLeft = false;
-            }
-        }
 
-        currentDwarfFrame = getFrame(0.3, 3);
+            currentDwarfFrame = getFrame(0.3, 3);
+        }
 
         // 公主走路
         updatePrincess(dt);
 
         CheckMission();
     }
+
 
     public int getFrame(double d, int num_frames) {
         return (int) Math.floor(((animTime % d) / d) * num_frames);
@@ -187,6 +191,8 @@ public class SvartalfheimUpper extends GameEngine {
     boolean getMission = false;
     boolean plot1 = false;
     boolean checkMission = false;
+
+
 
     public void CheckMission() {
         if (distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
@@ -220,8 +226,8 @@ public class SvartalfheimUpper extends GameEngine {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >=220 && e.getY() <= 220 + 350) {
-            //createGame(new GoldMiner());
+        if ((e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) && getMission) {
+            createGame(new GoldMiner());
         }
 
         // 点击对话框显示下一张对话图片
@@ -268,6 +274,10 @@ public class SvartalfheimUpper extends GameEngine {
         } else if (e.getKeyCode() == KeyEvent.VK_F && distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
             plot1 = true;
             currentDialogueIndex = 0; // 按下 F 键时显示第一个对话框
+            dwarfStop = true; // 按下 F 键时停止矮人的移动
+            dwarfLeft = false; // 确保矮人面向右侧
+            currentDwarfFrame = 0; // 固定矮人的精灵图为第一帧
         }
     }
+
 }

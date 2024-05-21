@@ -6,9 +6,9 @@ import java.awt.event.MouseEvent;
 import java.util.Random;
 
 public class GoldMiner extends GameEngine {
-    public static void main(String[] args) {
-        createGame(new GoldMiner());
-    }
+//    public static void main(String[] args) {
+//        createGame(new GoldMiner());
+//    }
     Font customFont;
 
     AudioClip bgm;
@@ -415,7 +415,7 @@ public class GoldMiner extends GameEngine {
 
         if((e.getX() >= 550 && e.getX() <= 550 + 200 && e.getY() >= 350 && e.getY() <= 350 + 170) && playCheers){
             nextMission = true;
-            createGame(new SvartalfheimUpper());
+            createGame(new SvartalfheimUnder());
         }
 
         // Check if a gem is captured

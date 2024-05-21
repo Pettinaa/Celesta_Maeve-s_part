@@ -11,7 +11,7 @@ public class SvartalfheimUnder extends GameEngine{
     }
 
     //mission
-    Image mission;
+
     Point2D pos = new Point2D.Double();
     //princess
     Image princessSheet;
@@ -19,12 +19,7 @@ public class SvartalfheimUnder extends GameEngine{
     Image[] frames_down;
     Image[] frames_left;
     Image[] frames_right;
-    public void drawMission(){
-        mission = loadImage("Images/Svartalfheim/mission.png");
-        if(getMission){
-            drawImage(mission, 380, 220, 520, 350);
-        }
-    }
+
     //dwarf
     Image dwarf;
     Image[] framesDwarfLeft;
@@ -50,9 +45,9 @@ public class SvartalfheimUnder extends GameEngine{
     }
     public void drawDwarf(){
         if(dwarfLeft){
-            drawImage(framesDwarfLeft[currentDwarfFrame],  dwarfPositionX, 400,72 * 1.5,96 * 1.5);
+            drawImage(framesDwarfLeft[currentDwarfFrame],  dwarfPositionX + 200, 300,72 * 1.5,96 * 1.5);
         }else{
-            drawImage(framesDwarfRight[currentDwarfFrame],  dwarfPositionX, 400,72 * 1.5,96 * 1.5);
+            drawImage(framesDwarfRight[currentDwarfFrame],  dwarfPositionX + 200, 300,72 * 1.5,96 * 1.5);
         }
     }
     //princess
@@ -162,7 +157,7 @@ public class SvartalfheimUnder extends GameEngine{
 
     //game
     Image bg;
-    boolean getMission = false;
+
 
     @Override
     public  void init(){
@@ -175,9 +170,8 @@ public class SvartalfheimUnder extends GameEngine{
     public void paintComponent() {
         bg = loadImage("Images/Svartalfheim/bg.png");
         drawImage(bg, 0, 0, 1255,700);
-        getMission = true;
 
-        drawMission();
+
         drawDwarf();
         drawPrincess();
 
@@ -186,9 +180,7 @@ public class SvartalfheimUnder extends GameEngine{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) {
-            createGame(new GoldMiner());
-        }
+
 
     }
     @Override
@@ -222,20 +214,7 @@ public class SvartalfheimUnder extends GameEngine{
             is_up = false;
             is_down = false;
             is_left = false;
-//        } else if (e.getKeyCode() == KeyEvent.VK_F && distance(600, 250, pos.getX(), pos.getY()) < 75) {
-//            //conversationIndex=0说明剧情1还没有开始，让剧情true
-//            if(conversationIndex == 0){
-//                trig1 = true;
-//            }
-//            //找到猫了，可以跟老头进行第二次对话了,plots2用于归还后小猫的位置，plots2用于第二段对话剧情
-//            if(complete){
-//                trig2 = true;
-//                plots2 = true;
-//            }
-//            //剧情1对话已经结束并且还没有完成找猫的任务，触发这段
-//            if(conversationIndex != 0 && !complete){
-//                trig3 = true;
-//            }
+
         }
     }
 
