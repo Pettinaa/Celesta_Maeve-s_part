@@ -90,6 +90,25 @@ public class SvartalfheimUpper extends GameEngine {
         }
     }
 
+    // Dialogue images
+    Image[] dialogueImages = new Image[5];
+    int currentDialogueIndex = -1; // 初始值为-1，表示没有显示任何对话
+
+    public void loadDialogueImages() {
+        dialogueImages[0] = loadImage("Images/Svartalfheim/princessTalk1.png");
+        dialogueImages[1] = loadImage("Images/Svartalfheim/dwarfTalk1.png");
+        dialogueImages[2] = loadImage("Images/Svartalfheim/princessTalk2.png");
+        dialogueImages[3] = loadImage("Images/Svartalfheim/dwarfTalk2.png");
+        dialogueImages[4] = loadImage("Images/Svartalfheim/princessTalk3.png");
+    }
+
+    // Draw dialogue images
+    public void drawDialogue() {
+        if (currentDialogueIndex >= 0 && currentDialogueIndex < dialogueImages.length) {
+            drawImage(dialogueImages[currentDialogueIndex], 0, 530, 1255, 200);
+        }
+    }
+
     boolean is_moving = false;
     boolean is_up = false;
     boolean is_down = true;
@@ -154,6 +173,8 @@ public class SvartalfheimUpper extends GameEngine {
 
         // 公主走路
         updatePrincess(dt);
+
+        CheckMission();
     }
 
     public int getFrame(double d, int num_frames) {
@@ -162,29 +183,54 @@ public class SvartalfheimUpper extends GameEngine {
 
     // game
     Image bg;
+
     boolean getMission = false;
+    boolean plot1 = false;
+    boolean checkMission = false;
+
+    public void CheckMission() {
+        if (distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
+            checkMission = true;
+        }
+    }
 
     @Override
     public void init() {
         initDwarf();
         initPrincess();
+        loadDialogueImages();
     }
 
     @Override
     public void paintComponent() {
         bg = loadImage("Images/Svartalfheim/dwarfHome.png");
         drawImage(bg, 0, 0, 1255, 700);
-        getMission = true;
 
-        // drawMission();
         drawDwarf();
         drawPrincess();
+        if (checkMission) {
+            changeColor(Color.white);
+            drawText(dwarfPositionX + 300, 350, "Press F", "Arial", 12);
+        }
+
+        drawDialogue();
+
+        drawMission(); // 始终调用 drawMission 方法
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) {
+        if (e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >=220 && e.getY() <= 220 + 350) {
             //createGame(new GoldMiner());
+        }
+
+        // 点击对话框显示下一张对话图片
+        if (e.getY() >= 530 && e.getY() <= 730) {
+            currentDialogueIndex++; // 显示下一张对话图片
+            if (currentDialogueIndex >= dialogueImages.length) {
+                currentDialogueIndex = -1; // 重置为初始值，表示没有显示任何对话
+                getMission = true; // 设置 getMission 为 true
+            }
         }
     }
 
@@ -219,6 +265,9 @@ public class SvartalfheimUpper extends GameEngine {
             is_up = false;
             is_down = false;
             is_left = false;
+        } else if (e.getKeyCode() == KeyEvent.VK_F && distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
+            plot1 = true;
+            currentDialogueIndex = 0; // 按下 F 键时显示第一个对话框
         }
     }
 }
