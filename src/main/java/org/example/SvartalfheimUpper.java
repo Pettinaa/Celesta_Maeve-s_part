@@ -96,11 +96,11 @@ public class SvartalfheimUpper extends GameEngine {
     int currentDialogueIndex = -1; // 初始值为-1，表示没有显示任何对话
 
     public void loadDialogueImages() {
-        dialogueImages[0] = loadImage("Images/Svartalfheim/princessTalk1.png");
-        dialogueImages[1] = loadImage("Images/Svartalfheim/dwarfTalk1.png");
-        dialogueImages[2] = loadImage("Images/Svartalfheim/princessTalk2.png");
-        dialogueImages[3] = loadImage("Images/Svartalfheim/dwarfTalk2.png");
-        dialogueImages[4] = loadImage("Images/Svartalfheim/princessTalk3.png");
+        dialogueImages[0] = loadImage("Images/Svartalfheim/princessTalkUpper1.png");
+        dialogueImages[1] = loadImage("Images/Svartalfheim/dwarfTalkUpper1.png");
+        dialogueImages[2] = loadImage("Images/Svartalfheim/princessTalkUpper2.png");
+        dialogueImages[3] = loadImage("Images/Svartalfheim/dwarfTalkUpper2.png");
+        dialogueImages[4] = loadImage("Images/Svartalfheim/princessTalkUpper3.png");
     }
 
     // Draw dialogue images
