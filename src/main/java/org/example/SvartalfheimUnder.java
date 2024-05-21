@@ -34,6 +34,9 @@ public class SvartalfheimUnder extends GameEngine {
     Image[] dialogueImages = new Image[5];
     int currentDialogueIndex = -1; // 初始值为-1，表示没有显示任何对话
 
+    // 添加对话完成标志
+    boolean dialogueFinished = false;
+
     public void loadDialogueImages() {
         dialogueImages[0] = loadImage("Images/Svartalfheim/dwarfTalkUnder1.png");
         dialogueImages[1] = loadImage("Images/Svartalfheim/dwarfTalkUnder2.png");
@@ -185,17 +188,17 @@ public class SvartalfheimUnder extends GameEngine {
 
     // 计算两点之间的距离
     public double distance(double x1, double y1, double x2, double y2) {
-        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2        - y1, 2));
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
-    //绘制naga‘s grace
+    // 绘制naga‘s grace
     ImageIcon grace;
     Image board;
-    public void drawGrace(){
+    public void drawGrace() {
         board = loadImage("Images/Svartalfheim/board.png");
-        drawImage(board, 250, 250, 500, 500);
+        drawImage(board, 380, 190, 500, 300);
         String gracePath = "Images/Svartalfheim/crown.gif";
-        drawGif(gracePath, 300, 300, 400, 400);
+        drawGif(gracePath, 550, 310, 150, 150);
     }
 
     @Override
@@ -220,13 +223,14 @@ public class SvartalfheimUnder extends GameEngine {
         }
 
         // 绘制对话
+        // 绘制对话
         drawDialogue();
-    }
 
-//    @Override
-//    public void mousePressed(MouseEvent e) {
-//        // 公主对话触发通过按下F键实现，在keyPressed方法中处理
-//    }
+        // 如果对话完成，则绘制 Grace
+        if (dialogueFinished) {
+            drawGrace();
+        }
+    }
 
     @Override
     public void keyReleased(KeyEvent e) {
@@ -260,7 +264,6 @@ public class SvartalfheimUnder extends GameEngine {
             is_down = false;
             is_left = false;
         } else if (e.getKeyCode() == KeyEvent.VK_F && distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
-            //plot1 = true;
             currentDialogueIndex = 0; // 按下 F 键时显示第一个对话框
             dwarfStop = true; // 按下 F 键时停止矮人的移动
             dwarfLeft = false; // 确保矮人面向右侧
@@ -270,8 +273,8 @@ public class SvartalfheimUnder extends GameEngine {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if ((e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) ) {
-            //createGame(new GoldMiner());
+        if ((e.getX() >= 380 && e.getX() <= 380 + 500 && e.getY() >= 190 && e.getY() <= 190 + 300) && dialogueFinished) {
+            createGame(new GoldMiner());
         }
 
         // 点击对话框显示下一张对话图片
@@ -280,10 +283,8 @@ public class SvartalfheimUnder extends GameEngine {
                 currentDialogueIndex++; // 显示下一张对话图片
             } else {
                 currentDialogueIndex = -1; // 重置为初始值，表示没有显示任何对话
-                //getMission = true; // 设置 getMission 为 true
+                dialogueFinished = true; // 设置对话完成标志为 true
             }
         }
     }
-
 }
-
