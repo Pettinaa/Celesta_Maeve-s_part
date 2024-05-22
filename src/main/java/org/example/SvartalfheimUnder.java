@@ -7,9 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 public class SvartalfheimUnder extends GameEngine {
-    public static void main(String[] args) {
-        createGame(new SvartalfheimUnder());
-    }
+//    public static void main(String[] args) {
+//        createGame(new SvartalfheimUnder());
+//    }
 
     Point2D pos = new Point2D.Double();
     // princess
@@ -274,6 +274,8 @@ public class SvartalfheimUnder extends GameEngine {
     @Override
     public void mousePressed(MouseEvent e) {
         if ((e.getX() >= 380 && e.getX() <= 380 + 500 && e.getY() >= 190 && e.getY() <= 190 + 300) && dialogueFinished) {
+
+
             createGame(new GoldMiner());
         }
 

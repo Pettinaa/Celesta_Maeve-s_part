@@ -19,7 +19,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 	//-------------------------------------------------------
 	// Game Engine Frame and Panel
 	//-------------------------------------------------------
-	JFrame mFrame;
+	static JFrame mFrame;
 	GamePanel mPanel;
 	int mWidth, mHeight;
 	Graphics2D mGraphics;
@@ -44,7 +44,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 			// Do Nothing
 		}
 	}
-	
+
 	//-------------------------------------------------------
 	// Functions to control the framerate
 	//-------------------------------------------------------
@@ -153,36 +153,76 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				// Create the window	
+				// Create the window
 				setupWindow(1255,700);
 			}
 		});
 	}
 
+	//关闭窗口
+	public static JFrame getJFrame() {
+		return mFrame;
+	}
+
+	public static void Close(GameEngine game){
+		if (game != null) {
+			JFrame frame = GameEngine.getJFrame();
+			if (frame != null) {
+				frame.dispose();
+			}
+		}
+	}
+
+	// Keep track of the current game
+	//从这里修改
+	private static GameEngine currentGame;
+
 	// Create Game Function
 	public static void createGame(GameEngine game, int framerate) {
+		// Check if there is a current game running
+		if (currentGame != null) {
+			// Stop the current game
+			currentGame.stop();
+			// Remove the panel from the frame
+			currentGame.mFrame.remove(currentGame.mPanel);
+		}
+
+		// Set the new game as the current game
+		currentGame = game;
+
 		// Initialise Game
 		game.init();
 
 		// Start the Game
 		game.gameLoop(framerate);
+
+		// Add the panel of the new game to the frame
+		game.mFrame.add(game.mPanel);
+		game.mFrame.revalidate();
+		game.mFrame.repaint();
 	}
 
+	// Create Game Function with default framerate
 	public static void createGame(GameEngine game) {
-		// Call CreateGame
 		createGame(game, 30);
 	}
 
+	// Stop the current game
+	public void stop() {
+		timer.stop();
+	}
+
+	//到这里结束
 	// Game Timer
 	protected class GameTimer extends Timer {
 		private static final long serialVersionUID = 1L;
 		private int framerate;
-		
+
 		protected GameTimer(int framerate, ActionListener listener) {
 			super(1000/framerate, listener);
 			this.framerate = framerate;
 		}
-		
+
 		protected void setFramerate(int framerate) {
 			if (framerate < 1) framerate = 1;
 			this.framerate = framerate;
@@ -191,12 +231,12 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 			setInitialDelay(0);
 			setDelay(delay);
 		}
-		
+
 		protected int getFramerate() {
 			return framerate;
 		}
 	}
-	
+
 	// Main Loop of the game. Runs continuously
 	// and calls all the updates of the game and
 	// tells the game to display a new frame.
@@ -274,14 +314,14 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
 	// Called whenever a key is released
 	public void keyReleased(KeyEvent event) {}
-	
+
 	// Called whenever a key is pressed and immediately released
 	public void keyTyped(KeyEvent event) {}
-	
+
 	//-------------------------------------------------------
 	// Mouse functions
 	//-------------------------------------------------------
-	
+
 	// Called whenever a mouse button is clicked
 	// (pressed and released in the same position)
 	public void mouseClicked(MouseEvent event) {}
@@ -330,7 +370,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		// Clamp values
 		if(red < 0)   {red = 0;}
 		if(red > 255) {red = 255;}
-		
+
 		if(green < 0)   {green = 0;}
 		if(green > 255) {green = 255;}
 
@@ -358,7 +398,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		// Clamp values
 		if(red < 0)   {red = 0;}
 		if(red > 255) {red = 255;}
-		
+
 		if(green < 0)   {green = 0;}
 		if(green > 255) {green = 255;}
 
@@ -858,7 +898,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
 		// Generate a random number
 		double d = mRandom.nextDouble();
-		
+
 		// Convert to an integer in range [0, max) and return
 		return (int)(d*max);
 	}
@@ -873,7 +913,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
 		// Generate a random number
 		float d = mRandom.nextFloat();
-		
+
 		// Convert to range [0, max) and return
 		return d*max;
 	}
@@ -888,7 +928,7 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 
 		// Generate a random number
 		double value = mRandom.nextDouble();
-		
+
 		// Convert to range [0, max) and return
 		return value*max;
 	}

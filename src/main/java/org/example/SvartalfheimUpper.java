@@ -6,8 +6,18 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
 public class SvartalfheimUpper extends GameEngine {
+    static boolean close = false;
     public static void main(String[] args) {
-        createGame(new SvartalfheimUpper());
+        SvartalfheimUpper upper = new SvartalfheimUpper();
+        createGame(upper);
+        while(!upper.close){
+            System.out.println(" ");
+        }
+        if(upper.close){
+            Close(upper);
+            GoldMiner goldMiner = new GoldMiner();
+            createGame(goldMiner);
+        }
     }
 
     // mission
@@ -227,7 +237,14 @@ public class SvartalfheimUpper extends GameEngine {
     @Override
     public void mousePressed(MouseEvent e) {
         if ((e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) && getMission) {
-            createGame(new GoldMiner());
+            //GoldMiner goldMiner = new GoldMiner();
+           // createGame(goldMiner);
+            close = true;
+
+            // Close the current game instance
+//            if (close) {
+//                Close(this);
+//            }
         }
 
         // 点击对话框显示下一张对话图片

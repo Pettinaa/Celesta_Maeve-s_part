@@ -7,7 +7,8 @@ import java.util.Random;
 
 public class GoldMiner extends GameEngine {
 //    public static void main(String[] args) {
-//        createGame(new GoldMiner());
+//        //createGame(new GoldMiner());
+//
 //    }
     Font customFont;
 
@@ -252,7 +253,7 @@ public class GoldMiner extends GameEngine {
 
 
     public void init() {
-        setupWindow(1255, 700);
+        //setupWindow(1255, 700);
         background = loadImage("Images/GoldMiner/bg.png");
         people = loadImage("Images/GoldMiner/people.png");
         bgm = loadAudio("Audio/GoldMiner/bgm.wav");
@@ -404,7 +405,7 @@ public class GoldMiner extends GameEngine {
 
     }
     boolean playCheers = false;
-    boolean nextMission = false;
+    static boolean nextMission = false;
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -416,6 +417,8 @@ public class GoldMiner extends GameEngine {
         if((e.getX() >= 550 && e.getX() <= 550 + 200 && e.getY() >= 350 && e.getY() <= 350 + 170) && playCheers){
             nextMission = true;
             createGame(new SvartalfheimUnder());
+
+
         }
 
         // Check if a gem is captured
