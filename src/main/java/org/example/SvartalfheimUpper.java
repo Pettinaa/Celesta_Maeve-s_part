@@ -8,16 +8,17 @@ import java.awt.geom.Point2D;
 public class SvartalfheimUpper extends GameEngine {
     static boolean close = false;
     public static void main(String[] args) {
-        SvartalfheimUpper upper = new SvartalfheimUpper();
-        createGame(upper);
-        while(!upper.close){
-            System.out.println(" ");
-        }
-        if(upper.close){
-            Close(upper);
-            GoldMiner goldMiner = new GoldMiner();
-            createGame(goldMiner);
-        }
+//        SvartalfheimUpper upper = new SvartalfheimUpper();
+//        createGame(upper);
+//        while(!upper.close){
+//            System.out.println(" ");
+//        }
+//        if(upper.close){
+//            Close(upper);
+//            GoldMiner goldMiner = new GoldMiner();
+//            createGame(goldMiner);
+//        }
+        createGame(new SvartalfheimUpper());
     }
 
     // mission
@@ -161,8 +162,12 @@ public class SvartalfheimUpper extends GameEngine {
         }
     }
 
+    boolean musicOn = true;
+
     @Override
     public void update(double dt) {
+
+
         animTime += dt;
 
         // 让矮人走路，只有在 dwarfStop 为 false 时才移动
@@ -188,8 +193,13 @@ public class SvartalfheimUpper extends GameEngine {
         updatePrincess(dt);
 
         CheckMission();
-    }
 
+
+        if(!musicOn){
+            stopAudio(bgm);
+            //System.out.println("2");
+        }
+    }
 
     public int getFrame(double d, int num_frames) {
         return (int) Math.floor(((animTime % d) / d) * num_frames);
@@ -202,19 +212,25 @@ public class SvartalfheimUpper extends GameEngine {
     boolean plot1 = false;
     boolean checkMission = false;
 
-
-
     public void CheckMission() {
         if (distance(dwarfPositionX + 300, 350, pos.getX(), pos.getY()) < 75) {
             checkMission = true;
+        } else {
+            checkMission = false;
         }
     }
+    AudioClip bgm;
 
     @Override
     public void init() {
         initDwarf();
         initPrincess();
         loadDialogueImages();
+        //bgm = loadAudio("Audio/Svartalfheim/GrassyTurtlesandSeedRats.wav");
+        startAudioLoop(bgm);
+
+
+
     }
 
     @Override
@@ -232,23 +248,25 @@ public class SvartalfheimUpper extends GameEngine {
         drawDialogue();
 
         drawMission(); // 始终调用 drawMission 方法
+
+
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if ((e.getX() >= 380 && e.getX() <= 380 + 520 && e.getY() >= 220 && e.getY() <= 220 + 350) && getMission) {
-            //GoldMiner goldMiner = new GoldMiner();
-           // createGame(goldMiner);
+            musicOn = false;
             close = true;
 
-            // Close the current game instance
-//            if (close) {
-//                Close(this);
-//            }
+            createGame(new GoldMiner());
+            //Close(this);
+
+
         }
 
         // 点击对话框显示下一张对话图片
-        if (e.getY() >= 530 && e.getY() <= 730) {
+        if (currentDialogueIndex >= 0 && e.getY() >= 530 && e.getY() <= 730) {
             currentDialogueIndex++; // 显示下一张对话图片
             if (currentDialogueIndex >= dialogueImages.length) {
                 currentDialogueIndex = -1; // 重置为初始值，表示没有显示任何对话
@@ -296,5 +314,4 @@ public class SvartalfheimUpper extends GameEngine {
             currentDwarfFrame = 0; // 固定矮人的精灵图为第一帧
         }
     }
-
 }

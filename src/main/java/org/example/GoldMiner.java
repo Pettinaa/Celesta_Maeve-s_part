@@ -256,11 +256,11 @@ public class GoldMiner extends GameEngine {
         //setupWindow(1255, 700);
         background = loadImage("Images/GoldMiner/bg.png");
         people = loadImage("Images/GoldMiner/people.png");
-        bgm = loadAudio("Audio/GoldMiner/bgm.wav");
+       // bgm = loadAudio("Audio/GoldMiner/bgm.wav");
         cheers = loadAudio("Audio/GoldMiner/cheers.wav");
 
         //startAudioLoop(bgm, 90);
-        playAudio(bgm);
+        //playAudio(bgm);
 
         initLine();
         initGoldsAndGems();
@@ -415,9 +415,9 @@ public class GoldMiner extends GameEngine {
         }
 
         if((e.getX() >= 550 && e.getX() <= 550 + 200 && e.getY() >= 350 && e.getY() <= 350 + 170) && playCheers){
-            nextMission = true;
+            //nextMission = true;
             createGame(new SvartalfheimUnder());
-
+            Close(this);
 
         }
 

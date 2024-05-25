@@ -29,7 +29,7 @@ public class Midgard extends GameEngine {
     double[] treePositionX;
     double[] treePositionY;
 
-
+AudioClip bgm;
 
     // Initialise the Game
     @Override
@@ -54,6 +54,11 @@ public class Midgard extends GameEngine {
         initCat();
 
         pos.setLocation(627.5, 350);
+
+
+
+        bgm = loadAudio("Audio/Svartalfheim/GrassyTurtlesandSeedRats.wav");
+        playAudio(bgm);
     }
 
     @Override
@@ -61,11 +66,17 @@ public class Midgard extends GameEngine {
         // Update Function
         animTime += dt;
 
+        if(is_up){
+            stopAudio(bgm);
+            System.out.println("1");
+        }
+
         //让公主走路
         if (is_moving) {
             if (is_up) {
                 //drawImage(frames_up[currentFrame], princessX, princessY-5, 72, 96);
                 pos.setLocation(pos.getX(), pos.getY() - 5);
+
             } else if (is_down) {
                 //drawImage(frames_down[currentFrame], princessX, princessY+5, 72, 96);
                 pos.setLocation(pos.getX(), pos.getY() + 5);

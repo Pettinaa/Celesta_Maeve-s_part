@@ -173,6 +173,11 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 		}
 	}
 
+	//新添加
+	public void start() {
+		init();
+		timer.start();
+	}
 	// Keep track of the current game
 	//从这里修改
 	private static GameEngine currentGame;
@@ -882,6 +887,30 @@ public abstract class GameEngine implements KeyListener, MouseListener, MouseMot
 			clip.stop();
 		}
 	}
+
+	// Stops a specific AudioClip from playing
+	public void stopAudio(AudioClip audioClip) {
+		if (audioClip == null) {
+			// Print error message
+			System.out.println("Error: audioClip is null\n");
+
+			// Return
+			return;
+		}
+
+		try {
+			Clip clip = audioClip.getLoopClip();
+			if (clip != null && clip.isRunning()) {
+				clip.stop();
+				clip.close();
+				audioClip.setLoopClip(null); // Ensure the loop clip reference is cleared
+			}
+		} catch (Exception exception) {
+			// Display Error Message
+			System.out.println("Error: could not stop Audio Clip\n");
+		}
+	}
+
 
 	//-------------------------------------------------------
 	// Maths Functions
